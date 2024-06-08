@@ -7,3 +7,4 @@
 	<cooldownentry name="Lightning" defaultcooldown="0" cooldownbartype="Regular" hue="1001" pauseduringworldsaves="True" hidewheninactive="True" />
 	<cooldownentry name="Energy Bolt" defaultcooldown="0" cooldownbartype="Regular" hue="294" pauseduringworldsaves="True" hidewheninactive="True" />
 	<cooldownentry name="FlameStrike" defaultcooldown="0" cooldownbartype="Regular" hue="134" pauseduringworldsaves="True" hidewheninactive="True" />
+    <cooldownentry name="Mind Blast" defaultcooldown="0" cooldownbartype="Regular" hue="118" pauseduringworldsaves="True" hidewheninactive="True" />
