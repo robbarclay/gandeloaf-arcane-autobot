@@ -1,0 +1,667 @@
+#Gandeloaf's Arcane Autobot
+#Based upon SINGsingFan Lazy Mage with Debuff's script
+
+#Set the Wizard grimoire Spells you want to 
+#cast to 1 and set matching timers
+
+#Set Spells to cast
+    @setvar! castHarm 1
+    @setvar! castMagicArrow 1
+    @setvar! castFireball 1
+    @setvar! castLightning 1 
+    @setvar! castBless 0
+    @setvar! castReactiveArmor 1
+    @setvar! castProtection 0
+    @setvar! castArchProtection 0
+    @setvar! castCurse 1
+    @setvar! castManaDrain 1
+    @setvar! castEnergyBolt 1
+    @setvar! castFlamestrike 1
+    @setvar! castMagicReflection 1
+
+#Are you a summoner or not? (Arcane Mage to disable)
+    @setvar isSummoner 0
+    
+#Wizard Grimoire Timers
+    @setvar! wizHarmCd 60000 
+    @setvar! wizMagicArrowCd 40000
+    @setvar! wizFireballCd 60000 
+    @setvar! wizLightningCd 60000
+    @setvar! wizFlameStrikeCd 60000
+    @setvar! wizEnergyBoltCd 60000
+    @setvar! MushroomsCd 60000
+    
+#Debuff Timers
+    @setvar! CurseCd 60000
+    @setvar! ManaDrainCd 60000
+    @setvar! ManaVampCd 300000
+
+#Misc Variables
+    @setvar! hpHealBreak 30
+    @setvar! cdPoisonStrike 31500
+    @setvar globalWait 250
+
+if not varexist myPreviousKillTarget
+    setvar myPreviousKillTarget 0     
+endif
+
+#WizardGrimoireTimers    
+    if not timerexists "wizHarm"
+        createtimer "wizHarm"
+        settimer "wizHarm" wizHarmCd
+    endif
+
+    if not timerexists "wizMagicArrow"
+        createtimer "wizMagicArrow"
+        settimer "wizMagicArrow" wizMagicArrowCd
+    endif
+    
+    if not timerexists "wizFlameStrike"
+        createtimer "wizFlameStrike"
+        settimer "wizFlameStrike" wizFlameStrikeCd
+    endif
+    
+    if not timerexists "wizEnergyBolt"
+        createtimer "wizEnergyBolt"
+        settimer "wizEnergyBolt" wizEnergyBoltCd
+    endif
+    
+    if not timerexists "wizFireball"
+        createtimer "wizFireball"
+        settimer "wizFireball" wizFireballCd
+    endif
+    
+    if not timerexists "wizLightning"
+        createtimer "wizLightning"
+        settimer "wizLightning" wizLightningCd
+    endif
+    
+    if not timerexists "wizFlamestrike"
+        createtimer "wizFlamestrike"
+        settimer "wizFlamestrike" wizFlamestrikeCd
+    endif
+    
+    if not timerexists "Mushrooms"
+        createtimer "Mushrooms"
+        settimer "Mushrooms" MushroomsCd
+    endif
+
+#DebuffTimer
+    if not timerexists "CurseDb"
+        createtimer "CurseDb"
+        settimer "CurseDb" CurseCd
+    endif
+    
+    if not timerexists "ManaDrainDb"
+        createtimer "ManaDrainDb"
+        settimer "ManaDrainDb" ManaDrainCd
+    endif
+    
+    if not timerexists "ManaVampDb"
+        createtimer "ManaVampDb"
+        settimer "ManaVampDb" ManaVampCd
+    endif
+
+#MiscTimers
+    if not timerexists poisonStrikeTimer
+        createtimer poisonStrikeTimer
+        settimer poisonStrikeTimer cdPoisonStrike
+    endif
+
+//Start of Script
+
+#FindTarget
+
+    hotkey "Target Closest Non-Friendly Monster"
+    
+    if insysmsg "No one"
+
+        if targetexists 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        
+        stop
+    endif
+    
+    @setvar myKillTarget lasttarget 
+
+#Kill Sequence
+
+while not dead myKillTarget
+    
+#ShowTarget
+    if not find myKillTarget ground -1 -1 10
+        overhead "No Target Found"
+        wait 500
+    else 
+        overhead " ◆◆  Target ◆◆  " 38 myKillTarget 
+        overhead " ◆◆ ↓↓↓©◆◆ " 38 myKillTarget
+    endif
+
+    if targetexists 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+    endif
+        
+    if insysmsg "No one"
+
+        if targetexists 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        
+        stop
+    endif
+
+#Food Buff Check
+    if not findbuff "food satisfaction" and findtype "tray" backpack as food
+        dclick food
+        wait globalWait
+    endif
+
+
+#Make sure we have a spell book attached
+#
+#        if findlayer self righthand as item
+#            // do nothing
+#        elseif findtype "3834" backpack as item
+#            getlabel item spellBookDesc
+#            if "blessed" in spellBookDesc
+#                @ignore item
+#            elseif "unidentified" in spellBookDesc
+#                @ignore item
+#            else
+#                dclick item    
+#            endif
+#        else 
+#            overhead "No Spellbooks!" 34
+#        endif
+
+
+#Heals
+    if diffhits >= 30
+        if targetexists 
+            hotkey 'Cancel Current Target'
+        endif
+        
+        while not targetexists 'beneficial'
+            if diffhits <= 10
+                cast 'Heal'
+            elseif diffhits >= 60
+                cast 'Heal'
+            else
+                cast 'Greater Heal'                
+            endif
+            wait globalWait
+            if hp = maxhp
+                hotkey '> Interrupt'
+                break
+            endif
+        endwhile
+        
+        if targetexists 'beneficial'
+            target self
+            wait globalWait
+        endif
+        
+        replay
+    endif
+    
+    if findbuff "Greater Poison" or findbuff "Deadly Poison"
+        hotkey "Cancel Current Target"
+        hotkey "Clear Target Queue"
+        cast "Cure"
+        wft
+    
+        if targetexists beneficial
+            target self
+            wait globalWait
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        
+    endif
+
+    if findbuff "Meditating"
+        while mana < 40
+        //do nothing
+        endwhile
+    endif
+        
+        
+#Mana Check
+    if mana < 30
+        useskill "Meditation"
+        wait globalWait
+        while mana < 70
+            wait 500
+        endwhile
+
+    endif
+
+#BlessCheck
+        
+    if not findbuff "Strength" and castBless > 0
+        hotkey "Cancel Current Target"
+        hotkey "Clear Target Queue"
+        cast "Bless"
+        wait 1350
+    
+        if targetexists beneficial
+            target self
+            wait globalWait
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        
+    endif
+    
+#Protection
+    if not findbuff "Protection" and castProtection > 0
+        hotkey "Cancel Current Target"
+        hotkey "Clear Target Queue"
+        cast "Protection"
+        wait 1350
+    
+        if targetexists beneficial
+            target self
+            wait globalWait
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        
+    endif
+    
+#ArchProtection
+    if not findbuff "Protection" and castArchProtection > 0
+        hotkey "Cancel Current Target"
+        hotkey "Clear Target Queue"
+        cast "Arch Protection"
+        wait 1350
+    
+        if targetexists beneficial
+            target self
+            wait globalWait
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        
+    endif
+    
+#ReactiveArmor
+    if not findbuff "Reactive Armor" and castReactiveArmor > 0
+        hotkey "Cancel Current Target"
+        hotkey "Clear Target Queue"
+        cast "Reactive Armor"
+        wait 1350
+    
+        if targetexists beneficial
+            target self
+            wait globalWait
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        
+    endif
+
+#MagicReflection
+    if not findbuff "Magic Reflection" and castMagicReflection > 0
+        hotkey "Cancel Current Target"
+        hotkey "Clear Target Queue"
+        cast "Magic Reflection"
+        wait 1350
+    
+        if targetexists beneficial
+            target self
+            wait globalWait
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        
+    endif
+    
+#Summon
+
+    if isSummoner = 1
+        while followers < 5
+            
+            if followers < 4 and mana > 49
+                say "[Wither"
+                //wait 150
+                //say "[VengefulSpirit"
+                //cast "Fire Elemental"
+                cast "Earth Elemental"
+                //cast "Summon Daemon"
+
+                wait 3000
+                say "all guard me"
+            elseif followers < 4 and mana < 49
+                while not findbuff "Meditating"
+                    useskill "Meditation"
+                wait globalWait
+                endwhile
+                if findbuff "Meditation"
+                    replay
+                endif
+            endif
+            
+            if followers > 3 and followers < 5
+                cast "Summ. Creature"
+                wait 3000
+                say "all guard me"
+            endif
+            
+            if diffhits >= 30
+                hotkey '> Interrupt'
+                break
+            endif
+        endwhile    
+    endif
+
+    if mana < 70 and timer "Mushrooms" > MushroomsCd
+        dclicktype "mushroom"
+        wait globalWait
+        settimer "Mushrooms" 0
+    endif
+
+
+//Debuff
+
+    if not listexists cursedTarget
+        createlist cursedTarget
+    elseif listexists cursedTarget and timer "CurseDb" > CurseCd
+        removelist cursedTarget 
+        createlist cursedTarget
+    endif
+    
+    if not listexists manaDrainTarget
+        createlist manaDrainTarget
+    elseif listexists manaDrainTarget and timer "ManaDrainDb" > ManaVampCd
+        removelist manaDrainTarget  
+        createlist manaDrainTarget
+    endif
+    
+    if not listexists manaVampTarget
+        createlist manaVampTarget
+    elseif listexists manaVampTarget and timer "ManaVampDb" > ManaVampCd
+        removelist manaVampTarget   
+        createlist manaVampTarget
+    endif
+    
+#Mana Drain/Vamp
+        
+
+        
+    getlabel myKillTarget idMob
+    wait globalWait
+    
+    if "Boss" in idMob or "Summoned" in idMob
+
+        if not inlist manaVampTarget myKillTarget and castManaDrain > 0
+        
+            overhead "Boss Mob Detected"
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+            cast "Mana Vampire"
+            
+            while not targetexists 
+                wait 250
+            endwhile
+            
+            wait 150
+            
+            if targetexists harmful
+                target myKillTarget
+                pushlist manaVampTarget myKillTarget
+                pushlist manaDrainTarget mykillTarget
+                wait globalWait
+                
+                settimer "ManaVampDb" 0
+                settimer "ManaDrainDb" 0
+                
+            else 
+                hotkey "Cancel Current Target"
+                hotkey "Clear Target Queue"
+            endif
+
+        endif
+    
+    else
+    
+        if not inlist manaDrainTarget myKillTarget and not inlist manaVampTarget myKillTarget and castManaDrain > 0
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+            cast "Mana Drain"
+            
+            while not targetexists 
+                wait 250
+            endwhile
+            
+            wait 150
+            
+            if targetexists harmful
+                target myKillTarget
+            
+                pushlist manaDrainTarget myKillTarget
+                
+                wait globalWait
+                
+                settimer "ManaDrainDb" 0
+            else 
+                hotkey "Cancel Current Target"
+                hotkey "Clear Target Queue"
+            endif
+            
+        endif
+        
+    endif
+        
+
+
+#Curse
+
+    if not inlist cursedTarget myKillTarget and castCurse > 0
+    
+        cast "Curse"
+        
+        while not targetexists 
+            wait 250
+        endwhile
+        
+        wait 150
+        if targetexists harmful
+            target myKillTarget
+            wait globalWait
+            settimer "CurseDb" 0
+        
+            pushlist cursedTarget myKillTarget
+            
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        
+    endif
+
+
+        
+//Poison
+#Poison
+
+    if diffhits >= 30
+        replay
+    else
+        
+        getlabel myKillTarget desc2
+        overhead desc2
+        
+        if skill "poisoning" >= 100
+        
+            if "Lethal" in desc2 or "Deadly" in desc2 or "*looks violently ill*" in desc2
+                wait 250
+                if "Ticks" in desc2
+                
+                    if timer poisonStrikeTimer >= cdPoisonStrike
+                        say "[Poisonstrike"
+                        wait 500
+                        
+                            if targetexists 
+                                target myKillTarget 
+                                wait 350
+                                settimer poisonStrikeTimer 0
+                            endif
+                    endif
+                    
+                elseif mana >= 9
+                    cast "poison"
+                    wait 1500
+                    
+                    if targetexists harmful
+                        target myKillTarget
+                    else 
+                        hotkey "Cancel Current Target"
+                        hotkey "Clear Target Queue"
+                    endif
+                        
+
+                endif
+
+            else
+            
+                if "Ticks" in desc2 or "Poison" in desc2
+                    //wait
+                elseif mana >= 9
+                    cast "poison"
+                    wait 1500
+                    
+                    if targetexists harmful
+                        target myKillTarget
+                    else 
+                        hotkey "Cancel Current Target"
+                        hotkey "Clear Target Queue"
+                    endif
+                    
+                endif
+                
+            endif   
+        endif
+    endif
+
+
+//Cast Spells
+
+    if timer "wizMagicArrow" >= wizMagicArrowCd and mana > 4 and castMagicArrow > 0
+        hotkey "Magic Arrow"
+        wft
+        
+        if targetexists harmful
+            target myKillTarget
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        wait globalWait
+        settimer "wizMagicArrow" 0
+        overhead "Magic Arrow Wiz"
+    
+    elseif timer "wizHarm" >= wizHarmCd and mana > 6 and castHarm > 0
+        hotkey "Harm"
+        wft
+        if targetexists harmful
+            target myKillTarget
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        wait globalWait
+        settimer "wizHarm" 0
+        overhead "Harm Wiz"
+    
+    elseif timer "wizFireball" >= wizFireballCd and mana > 9 and castFireball > 0
+        hotkey "Fireball"
+        wft
+        if targetexists harmful
+            target myKillTarget
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        wait globalWait
+        settimer "wizFireball" 0
+        overhead "Fireball wiz"
+    
+    elseif timer "wizLightning" >= wizLightningCd and mana > 11 and castLightning > 0
+        hotkey "Lightning"
+        wft
+        if targetexists harmful
+            target myKillTarget
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        wait globalWait
+        settimer "wizLightning" 0
+        overhead "Lightning wiz"
+        
+    elseif timer "wizEnergyBolt" >= wizEnergyBoltCd and mana > 20 and castEnergyBolt > 0
+        hotkey "Energy Bolt"
+        wft
+        if targetexists harmful
+            target myKillTarget
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        wait globalWait
+        settimer "wizEnergyBolt" 0
+        overhead "Energy Bolt"
+    
+    elseif timer "wizFlamestrike" >= wizLightningCd and mana > 60 and castFlamestrike > 0
+        hotkey "Flamestrike"
+        wft
+        if targetexists harmful
+            target myKillTarget
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        wait globalWait
+
+        if mana < 70
+            dclicktype 'mushroom' backpack
+            wait 250
+        endif
+        
+    elseif mana > 6 and castHarm > 0
+        hotkey "Harm"
+        wft
+        if targetexists harmful
+            target myKillTarget
+        else 
+            hotkey "Cancel Current Target"
+            hotkey "Clear Target Queue"
+        endif
+        wait globalWait
+        settimer "wizHarm" 0
+        overhead "Harm Wiz"
+        
+    elseif not findbuff "Actively Meditating" and mana < 40
+        hotkey "Meditation"
+        wait 550
+        while mana < 40
+            wait 500
+        endwhile
+    endif
+    
+endwhile
+
+if not targetexists harmful and diffmana > 1
+    useskill Meditation
+endif
