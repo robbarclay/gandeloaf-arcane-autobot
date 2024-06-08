@@ -18,9 +18,6 @@
     @setvar! castEnergyBolt 1
     @setvar! castFlamestrike 1
     @setvar! castMagicReflection 1
-
-#Are you a summoner or not? (Arcane Mage to disable)
-    @setvar isSummoner 0
     
 #Wizard Grimoire Timers
     @setvar! wizHarmCd 60000 
@@ -327,44 +324,6 @@ while not dead myKillTarget
         
     endif
     
-#Summon
-
-    if isSummoner = 1
-        while followers < 5
-            
-            if followers < 4 and mana > 49
-                say "[Wither"
-                //wait 150
-                //say "[VengefulSpirit"
-                //cast "Fire Elemental"
-                cast "Earth Elemental"
-                //cast "Summon Daemon"
-
-                wait 3000
-                say "all guard me"
-            elseif followers < 4 and mana < 49
-                while not findbuff "Meditating"
-                    useskill "Meditation"
-                wait globalWait
-                endwhile
-                if findbuff "Meditation"
-                    replay
-                endif
-            endif
-            
-            if followers > 3 and followers < 5
-                cast "Summ. Creature"
-                wait 3000
-                say "all guard me"
-            endif
-            
-            if diffhits >= 30
-                hotkey '> Interrupt'
-                break
-            endif
-        endwhile    
-    endif
-
     if mana < 70 and timer "Mushrooms" > MushroomsCd
         dclicktype "mushroom"
         wait globalWait
