@@ -656,6 +656,34 @@ while not dead myKillTarget
     
 endwhile
 
-if not targetexists harmful and diffmana > 1
-    useskill Meditation
-endif
+hotkey "Cancel Current Target"
+hotkey "Clear Target Queue"
+
+#Final Heals
+    if diffhits >= 5
+        if targetexists 
+            hotkey 'Cancel Current Target'
+        endif
+        
+        while not targetexists 'beneficial'
+            if diffhits <= 10
+                cast 'Heal'
+            elseif diffhits >= 70
+                cast 'Heal'
+            else
+                cast 'Greater Heal'                
+            endif
+            wait globalWait
+            if hp = maxhp
+                hotkey '> Interrupt'
+                break
+            endif
+        endwhile
+        
+        if targetexists 'beneficial'
+            target self
+            wait globalWait
+        endif
+        
+        replay
+    endif
