@@ -12,16 +12,16 @@ Arcane abilities like leyline are now usable by the script, as I unlock the addi
 ## My current build this works well with:
 
 ### Skills
-Arcane 100
-Evaluating Intelligence 100
-Focus 100
-Magery 100
-Meditation 100
-Wrestling 100
-Inscription 120
+* Arcane 100
+* Evaluating Intelligence 100
+* Focus 100
+* Magery 100
+* Meditation 100
+* Wrestling 100
+* Inscription 120
 
 ### Arcane Codex:
-Leech 5
+* Leech 5
 
 ### Wizard's Grimoire:
 * Create Food 3
