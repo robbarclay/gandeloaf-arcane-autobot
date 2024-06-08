@@ -172,25 +172,6 @@ while not dead myKillTarget
         wait globalWait
     endif
 
-
-#Make sure we have a spell book attached
-#
-#        if findlayer self righthand as item
-#            // do nothing
-#        elseif findtype "3834" backpack as item
-#            getlabel item spellBookDesc
-#            if "blessed" in spellBookDesc
-#                @ignore item
-#            elseif "unidentified" in spellBookDesc
-#                @ignore item
-#            else
-#                dclick item    
-#            endif
-#        else 
-#            overhead "No Spellbooks!" 34
-#        endif
-
-
 #Heals
     if diffhits >= 30
         if targetexists 
@@ -478,70 +459,6 @@ while not dead myKillTarget
     endif
 
 
-        
-//Poison
-#Poison
-
-    if diffhits >= 30
-        replay
-    else
-        
-        getlabel myKillTarget desc2
-        overhead desc2
-        
-        if skill "poisoning" >= 100
-        
-            if "Lethal" in desc2 or "Deadly" in desc2 or "*looks violently ill*" in desc2
-                wait 250
-                if "Ticks" in desc2
-                
-                    if timer poisonStrikeTimer >= cdPoisonStrike
-                        say "[Poisonstrike"
-                        wait 500
-                        
-                            if targetexists 
-                                target myKillTarget 
-                                wait 350
-                                settimer poisonStrikeTimer 0
-                            endif
-                    endif
-                    
-                elseif mana >= 9
-                    cast "poison"
-                    wait 1500
-                    
-                    if targetexists harmful
-                        target myKillTarget
-                    else 
-                        hotkey "Cancel Current Target"
-                        hotkey "Clear Target Queue"
-                    endif
-                        
-
-                endif
-
-            else
-            
-                if "Ticks" in desc2 or "Poison" in desc2
-                    //wait
-                elseif mana >= 9
-                    cast "poison"
-                    wait 1500
-                    
-                    if targetexists harmful
-                        target myKillTarget
-                    else 
-                        hotkey "Cancel Current Target"
-                        hotkey "Clear Target Queue"
-                    endif
-                    
-                endif
-                
-            endif   
-        endif
-    endif
-
-
 //Cast Spells
 
     if timer "wizMagicArrow" >= wizMagicArrowCd and mana > 4 and castMagicArrow > 0
@@ -557,7 +474,6 @@ while not dead myKillTarget
         wait globalWait
         settimer "wizMagicArrow" 0
         cooldown "Magic Arrow" wizMagicArrowCd
-        overhead "Magic Arrow Wiz"
     
     elseif timer "wizHarm" >= wizHarmCd and mana > 6 and castHarm > 0
         hotkey "Harm"
@@ -571,7 +487,6 @@ while not dead myKillTarget
         wait globalWait
         settimer "wizHarm" 0
         cooldown "Harm" wizHarmCd
-        overhead "Harm Wiz"
     
     elseif timer "wizFireball" >= wizFireballCd and mana > 9 and castFireball > 0
         hotkey "Fireball"
@@ -585,7 +500,6 @@ while not dead myKillTarget
         wait globalWait
         settimer "wizFireball" 0
         cooldown "Fireball" wizFireballCd
-        overhead "Fireball wiz"
     
     elseif timer "wizLightning" >= wizLightningCd and mana > 11 and castLightning > 0
         hotkey "Lightning"
@@ -599,7 +513,6 @@ while not dead myKillTarget
         wait globalWait
         settimer "wizLightning" 0
         cooldown "Lightning" wizLightningCd
-        overhead "Lightning wiz"
         
     elseif timer "wizEnergyBolt" >= wizEnergyBoltCd and mana > 20 and castEnergyBolt > 0
         hotkey "Energy Bolt"
@@ -613,7 +526,6 @@ while not dead myKillTarget
         wait globalWait
         settimer "wizEnergyBolt" 0
         cooldown "Energy Bolt" wizEnergyBoltCd
-        overhead "Energy Bolt"
     
     elseif timer "wizFlameStrike" >= wizFlameStrikeCd and mana > 60 and castFlameStrike > 0
         hotkey "Flamestrike"
@@ -627,7 +539,6 @@ while not dead myKillTarget
         wait globalWait
         settimer "wizFlameStrike" 0
         cooldown "FlameStrike" wizFlameStrikeCd
-        overhead "FlameStrike"
 #        if mana < 70
 #            dclicktype 'mushroom' backpack
 #            wait 250
@@ -644,7 +555,6 @@ while not dead myKillTarget
         endif
         wait globalWait
         settimer "wizMindBlast" 0
-        overhead "Mind Blast"
         
     elseif not findbuff "Actively Meditating" and mana < 5
         hotkey "Meditation"
