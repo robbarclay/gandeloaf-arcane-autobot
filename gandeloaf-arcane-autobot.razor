@@ -1,5 +1,5 @@
 #Gandeloaf's Arcane Autobot
-#Based upon SINGsingFan Lazy Mage with Debuff's script
+#Initially based upon SINGsingFan Lazy Mage with Debuff's script
 
 #Set the Wizard grimoire Spells you want to 
 #cast to 1 and set matching timers
@@ -16,15 +16,22 @@
     @setvar! castCurse 1
     @setvar! castManaDrain 1
     @setvar! castEnergyBolt 1
-    @setvar! castFlamestrike 1
+    @setvar! castFlameStrike 1
     @setvar! castMagicReflection 1
-    
+
+#Use Weapon Ability
+    @setvar! useLeyline 1
+
+#Ability Cooldown Timers
+    #Leyline Cooldown set for just over 60 seconds as there's no feedback when the ability triggers
+    @setvar! arcLeylineCd 62000
+
 #Wizard Grimoire Timers
     @setvar! wizHarmCd 60000 
     @setvar! wizMagicArrowCd 40000
     @setvar! wizFireballCd 60000 
     @setvar! wizLightningCd 60000
-    @setvar! wizFlameStrikeCd 60000
+    @setvar! wizFlameStrikeCd 0
     @setvar! wizEnergyBoltCd 60000
     @setvar! MushroomsCd 60000
     
@@ -41,6 +48,12 @@
 if not varexist myPreviousKillTarget
     setvar myPreviousKillTarget 0     
 endif
+
+#AbilityTimers
+    if not timerexists "arcLeyline"
+        createtimer "arcLeyline"
+        settimer "arcLeyline" arcLeylineCd
+    endif
 
 #WizardGrimoireTimers    
     if not timerexists "wizHarm"
@@ -185,7 +198,7 @@ while not dead myKillTarget
         while not targetexists 'beneficial'
             if diffhits <= 10
                 cast 'Heal'
-            elseif diffhits >= 60
+            elseif diffhits >= 70
                 cast 'Heal'
             else
                 cast 'Greater Heal'                
@@ -324,12 +337,25 @@ while not dead myKillTarget
         
     endif
     
-    if mana < 70 and timer "Mushrooms" > MushroomsCd
-        dclicktype "mushroom"
-        wait globalWait
-        settimer "Mushrooms" 0
+#Get Mana Back
+    if mana < 70
+        #Check for mushroom and cooldown
+        if counttype 29012 backpack > 0 and timer "Mushrooms" > MushroomsCd
+            overhead "USING MUSHROOM"
+            dclicktype "mushroom"
+            wait globalWait
+            settimer "Mushrooms" 0
+            cooldown "Mushroom" 60000
+        elseif counttype 29012 backpack = 0 or timer "Mushrooms" < MushroomsCd
+            if timer "arcLeyline" > arcLeylineCd and useLeyline > 0
+                say '[WeaponAbility2'
+                overhead "LEYLINE"
+                settimer "arcLeyline" 0
+                #Leyline Cooldown set for just over 60 seconds as there's no feedback when the ability triggers
+                cooldown "Leyline" 62000
+            endif
+        endif
     endif
-
 
 //Debuff
 
@@ -528,6 +554,7 @@ while not dead myKillTarget
         endif
         wait globalWait
         settimer "wizMagicArrow" 0
+        cooldown "Magic Arrow" wizMagicArrowCd
         overhead "Magic Arrow Wiz"
     
     elseif timer "wizHarm" >= wizHarmCd and mana > 6 and castHarm > 0
@@ -541,6 +568,7 @@ while not dead myKillTarget
         endif
         wait globalWait
         settimer "wizHarm" 0
+        cooldown "Harm" wizHarmCd
         overhead "Harm Wiz"
     
     elseif timer "wizFireball" >= wizFireballCd and mana > 9 and castFireball > 0
@@ -554,6 +582,7 @@ while not dead myKillTarget
         endif
         wait globalWait
         settimer "wizFireball" 0
+        cooldown "Fireball" wizFireballCd
         overhead "Fireball wiz"
     
     elseif timer "wizLightning" >= wizLightningCd and mana > 11 and castLightning > 0
@@ -567,6 +596,7 @@ while not dead myKillTarget
         endif
         wait globalWait
         settimer "wizLightning" 0
+        cooldown "Lightning" wizLightningCd
         overhead "Lightning wiz"
         
     elseif timer "wizEnergyBolt" >= wizEnergyBoltCd and mana > 20 and castEnergyBolt > 0
@@ -580,9 +610,10 @@ while not dead myKillTarget
         endif
         wait globalWait
         settimer "wizEnergyBolt" 0
+        cooldown "Energy Bolt" wizEnergyBoltCd
         overhead "Energy Bolt"
     
-    elseif timer "wizFlamestrike" >= wizLightningCd and mana > 60 and castFlamestrike > 0
+    elseif timer "wizFlameStrike" >= wizFlameStrikeCd and mana > 60 and castFlameStrike > 0
         hotkey "Flamestrike"
         wft
         if targetexists harmful
@@ -592,11 +623,13 @@ while not dead myKillTarget
             hotkey "Clear Target Queue"
         endif
         wait globalWait
-
-        if mana < 70
-            dclicktype 'mushroom' backpack
-            wait 250
-        endif
+        settimer "wizFlameStrike" 0
+        cooldown "FlameStrike" wizFlameStrikeCd
+        overhead "FlameStrike"
+#        if mana < 70
+#            dclicktype 'mushroom' backpack
+#            wait 250
+#        endif
         
     elseif mana > 6 and castHarm > 0
         hotkey "Harm"
@@ -611,10 +644,10 @@ while not dead myKillTarget
         settimer "wizHarm" 0
         overhead "Harm Wiz"
         
-    elseif not findbuff "Actively Meditating" and mana < 40
+    elseif not findbuff "Actively Meditating" and mana < 5
         hotkey "Meditation"
         wait 550
-        while mana < 40
+        while mana < 20
             wait 500
         endwhile
     endif
