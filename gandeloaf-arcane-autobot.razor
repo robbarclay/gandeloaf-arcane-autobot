@@ -8,7 +8,8 @@
     @setvar! castHarm 1
     @setvar! castMagicArrow 1
     @setvar! castFireball 1
-    @setvar! castLightning 1 
+    @setvar! castLightning 1
+    @setvar! castMindBlast 1
     @setvar! castBless 0
     @setvar! castReactiveArmor 1
     @setvar! castProtection 0
@@ -33,6 +34,7 @@
     @setvar! wizLightningCd 60000
     @setvar! wizFlameStrikeCd 0
     @setvar! wizEnergyBoltCd 60000
+    @setvar! wizMindBlastCd 0
     @setvar! MushroomsCd 60000
     
 #Debuff Timers
@@ -85,10 +87,10 @@ endif
         createtimer "wizLightning"
         settimer "wizLightning" wizLightningCd
     endif
-    
-    if not timerexists "wizFlamestrike"
-        createtimer "wizFlamestrike"
-        settimer "wizFlamestrike" wizFlamestrikeCd
+
+    if not timerexists "wizMindBlast"
+        createtimer "wizMindBlast"
+        settimer "wizMindBlast" wizMindBlastCd
     endif
     
     if not timerexists "Mushrooms"
@@ -631,8 +633,8 @@ while not dead myKillTarget
 #            wait 250
 #        endif
         
-    elseif mana > 6 and castHarm > 0
-        hotkey "Harm"
+    elseif mana > 6 and castMindBlast > 0
+        hotkey "Mind Blast"
         wft
         if targetexists harmful
             target myKillTarget
@@ -641,8 +643,8 @@ while not dead myKillTarget
             hotkey "Clear Target Queue"
         endif
         wait globalWait
-        settimer "wizHarm" 0
-        overhead "Harm Wiz"
+        settimer "wizMindBlast" 0
+        overhead "Mind Blast"
         
     elseif not findbuff "Actively Meditating" and mana < 5
         hotkey "Meditation"
