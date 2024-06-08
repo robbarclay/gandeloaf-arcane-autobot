@@ -24,19 +24,19 @@ Inscription 120
 Leech 5
 
 ### Wizard's Grimoire:
-Create Food 3
-Magic Arrow 2
-Harm 1
-Protection 1
-Fireball 1
-Bless 1
-Lightning 1
-Greater Heal 1
-Curse 1
-Mana Drain 1
-Mind Blast 2
-Magic Reflect 2
-Flamestrike 1
+* Create Food 3
+* Magic Arrow 2
+* Harm 1
+* Protection 1
+* Fireball 1
+* Bless 1
+* Lightning 1
+* Greater Heal 1
+* Curse 1
+* Mana Drain 1
+* Mind Blast 2
+* Magic Reflect 2
+* Flamestrike 1
 
 ### Credits:
 The original bones of this are based on work done by SINGsingFan for his Lazy Mage script, it has been heavily modified since but I'd like to acknowledge their work.
