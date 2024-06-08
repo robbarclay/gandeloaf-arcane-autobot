@@ -27,7 +27,7 @@
     #Leyline Cooldown set for just over 60 seconds as there's no feedback when the ability triggers
     @setvar! arcLeylineCd 62000
 
-#Wizard Grimoire Timers
+#Wizard Grimoire Timers. By default I don't set timers for flamestrike or mind blast as I want those to always be castable depending on mana.
     @setvar! wizHarmCd 60000 
     @setvar! wizMagicArrowCd 40000
     @setvar! wizFireballCd 60000 
@@ -147,8 +147,8 @@ while not dead myKillTarget
         overhead "No Target Found"
         wait 500
     else 
-        overhead " ◆◆  Target ◆◆  " 38 myKillTarget 
-        overhead " ◆◆ ↓↓↓©◆◆ " 38 myKillTarget
+        overhead " ◆◆ Target ◆◆  " 38 myKillTarget 
+        overhead " ◆◆ ↓↓↓ ◆◆ " 38 myKillTarget
     endif
 
     if targetexists 
@@ -200,7 +200,8 @@ while not dead myKillTarget
         
         replay
     endif
-    
+
+#Poison
     if findbuff "Greater Poison" or findbuff "Deadly Poison"
         hotkey "Cancel Current Target"
         hotkey "Clear Target Queue"
@@ -221,8 +222,7 @@ while not dead myKillTarget
         while mana < 40
         //do nothing
         endwhile
-    endif
-        
+    endif    
         
 #Mana Check
     if mana < 30
@@ -265,8 +265,7 @@ while not dead myKillTarget
         else 
             hotkey "Cancel Current Target"
             hotkey "Clear Target Queue"
-        endif
-        
+        endif        
     endif
     
 #ArchProtection
