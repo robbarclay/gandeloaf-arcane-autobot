@@ -1,10 +1,16 @@
 #Add these to your profiles cooldown.xml file
 	<cooldownentry name="Leyline" defaultcooldown="62" cooldownbartype="Regular" hue="283" pauseduringworldsaves="True" hidewheninactive="True" />
 	<cooldownentry name="Mushroom" defaultcooldown="60" cooldownbartype="Regular" hue="142" pauseduringworldsaves="True" hidewheninactive="True" />
-	<cooldownentry name="Magic Arrow" defaultcooldown="40" cooldownbartype="Regular" hue="26" pauseduringworldsaves="True" hidewheninactive="True" />
+	<cooldownentry name="Magic Arrow" defaultcooldown="40" cooldownbartype="Regular" hue="26" pauseduringworldsaves="True" hidewheninactive="True">
+		<trigger triggertype="SysMessage" duration="" triggertext="Wizardry magic arrow activated" />
+	</cooldownentry>
 	<cooldownentry name="Harm" defaultcooldown="60" cooldownbartype="Regular" hue="38" pauseduringworldsaves="True" hidewheninactive="True" />
-	<cooldownentry name="Fireball" defaultcooldown="60" cooldownbartype="Regular" hue="37" pauseduringworldsaves="True" hidewheninactive="True" />
-	<cooldownentry name="Lightning" defaultcooldown="60" cooldownbartype="Regular" hue="1001" pauseduringworldsaves="True" hidewheninactive="True" />
+	<cooldownentry name="Fireball" defaultcooldown="60" cooldownbartype="Regular" hue="37" pauseduringworldsaves="True" hidewheninactive="True">
+		<trigger triggertype="SysMessage" duration="" triggertext="Wizardry fireball activated." />
+	</cooldownentry>
+	<cooldownentry name="Lightning" defaultcooldown="60" cooldownbartype="Regular" hue="1001" pauseduringworldsaves="True" hidewheninactive="True">
+		<trigger triggertype="SysMessage" duration="" triggertext="Wizardry lightning activated." />
+	</cooldownentry>
 	<cooldownentry name="Energy Bolt" defaultcooldown="60" cooldownbartype="Regular" hue="294" pauseduringworldsaves="True" hidewheninactive="True" />
 	<cooldownentry name="FlameStrike" defaultcooldown="0" cooldownbartype="Regular" hue="134" pauseduringworldsaves="True" hidewheninactive="True" />
 	<cooldownentry name="Mind Blast" defaultcooldown="0" cooldownbartype="Regular" hue="118" pauseduringworldsaves="True" hidewheninactive="True" />
