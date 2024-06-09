@@ -170,31 +170,59 @@ while not dead myKillTarget
     endif
 
 #Heals
-    if diffhits >= 30
-        if targetexists 
-            hotkey 'Cancel Current Target'
-        endif
+
+
+
+//    if diffhits >= 30
+//        if targetexists 
+//            hotkey 'Cancel Current Target'
+//        endif
         
-        while not targetexists 'beneficial'
-            if diffhits <= 10
+//        while not targetexists 'beneficial'
+//            if diffhits <= 10
+//                cast 'Heal'
+//            elseif diffhits >= 70
+//                cast 'Heal'
+//            else
+//                cast 'Greater Heal'                
+//            endif
+//            wait globalWait
+//            if hp = maxhp
+//                hotkey '> Interrupt'
+//                break
+//            endif
+//        endwhile
+        
+//        if targetexists 'beneficial'
+//            target self
+//            wait globalWait
+//        endif
+        
+//        replay
+//    endif
+
+
+    if diffhits > 15
+            if diffhits <= 20
+                interrupt
                 cast 'Heal'
+                wft
+                target 'self'   
             elseif diffhits >= 70
+                interrupt
                 cast 'Heal'
+                wft
+                target 'self'   
             else
-                cast 'Greater Heal'                
+                interrupt
+                cast 'Greater Heal'
+                wft
+                target 'self'       
             endif
             wait globalWait
             if hp = maxhp
-                hotkey '> Interrupt'
-                break
-            endif
-        endwhile
-        
-        if targetexists 'beneficial'
-            target self
-            wait globalWait
-        endif
-        
+                interrupt
+            endif        
         replay
     endif
 
@@ -213,19 +241,13 @@ while not dead myKillTarget
             hotkey "Clear Target Queue"
         endif
         
-    endif
-
-    if findbuff "Meditating"
-        while mana < 40
-        //do nothing
-        endwhile
-    endif    
+    endif  
         
 #Mana Check
-    if mana < 30
+    if mana < 5
         useskill "Meditation"
         wait globalWait
-        while mana < 70
+        while mana < 20
             wait 500
         endwhile
 
@@ -566,30 +588,26 @@ hotkey "Cancel Current Target"
 hotkey "Clear Target Queue"
 
 #Final Heals
-    if diffhits >= 5
-        if targetexists 
-            hotkey 'Cancel Current Target'
-        endif
-        
-        while not targetexists 'beneficial'
-            if diffhits <= 10
+    if diffhits > 0
+            if diffhits <= 20
+                interrupt
                 cast 'Heal'
+                wft
+                target 'self'   
             elseif diffhits >= 70
+                interrupt
                 cast 'Heal'
+                wft
+                target 'self'   
             else
-                cast 'Greater Heal'                
+                interrupt
+                cast 'Greater Heal'
+                wft
+                target 'self'       
             endif
             wait globalWait
             if hp = maxhp
-                hotkey '> Interrupt'
-                break
-            endif
-        endwhile
-        
-        if targetexists 'beneficial'
-            target self
-            wait globalWait
-        endif
-        
+                Interrupt'
+            endif        
         replay
     endif
