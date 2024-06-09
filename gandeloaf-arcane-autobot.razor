@@ -1,5 +1,4 @@
 #Gandeloaf's Arcane Autobot
-#Initially based upon SINGsingFan Lazy Mage with Debuff's script
 
 #Set the Wizard grimoire Spells you want to 
 #cast to 1 and set matching timers
@@ -120,8 +119,6 @@ endif
         settimer poisonStrikeTimer cdPoisonStrike
     endif
 
-//Start of Script
-
 #FindTarget
 
     hotkey "Target Closest Non-Friendly Monster"
@@ -147,8 +144,8 @@ while not dead myKillTarget
         overhead "No Target Found"
         wait 500
     else 
-        overhead " ◆◆ Target ◆◆  " 38 myKillTarget 
-        overhead " ◆◆ ↓↓↓ ◆◆ " 38 myKillTarget
+        overhead " ◆ Target ◆  " 38 myKillTarget 
+        overhead " ◆ ↓↓↓ ◆ " 38 myKillTarget
     endif
 
     if targetexists 
